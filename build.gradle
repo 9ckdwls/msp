@@ -1,0 +1,44 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.10'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	//웹
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	//테스트 관련
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	//클래스 변경 시 서버 재시작
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	//롬복
+	compileOnly 'org.projectlombok:lombok' 
+    annotationProcessor 'org.projectlombok:lombok'
+    //JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+    //스프링시큐리티
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    //JDBC와 jpa
+    implementation 'com.mysql:mysql-connector-j'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
