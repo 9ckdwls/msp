@@ -25,6 +25,7 @@ public class Box {
 	
 	private int used;
 	
+	//반환되는 JSON 값을 문자열로 바꾸기
 	@JsonProperty("location")
     public String getLocationAsText() {
         return location != null ? location.toText() : null;

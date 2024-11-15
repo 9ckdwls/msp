@@ -25,7 +25,7 @@ public class BoxService {
 		// 주어진 좌표에서 Point 객체 생성
 		Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
 
-		// 위치 내의 BatteryCollectionBox를 조회
+		// 위치 내의 Box를 조회
 		return repository.findByLocationWithinRadius(point, radius);
 	}
 

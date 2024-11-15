@@ -10,25 +10,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mysite.service.UserService;
+
 @Controller
 @ResponseBody
 public class MainController {
+	
+	private final UserService userService;
+	
+	public MainController(UserService userService) {
+        this.userService = userService;
+    }
+	
 	@GetMapping("/")
 	public String mainP() {
 		
-		String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
-		System.out.println("Test: " + authentication);
-		System.out.println(org.hibernate.Version.getVersionString());
-		
-		Collection<? extends GrantedAuthority> authorites = authentication.getAuthorities();
-		Iterator<? extends GrantedAuthority> iter = authorites.iterator();
-		GrantedAuthority auth = iter.next();
-		String role = auth.getAuthority();
-		
-		return "Main Controller" + userId + role; 
+		String userId = userService.getCurrentUserId(); // 사용자 ID 가져오기
+        String role = userService.getCurrentUserRole(); // 사용자 권한(Role) 가져오기
+
+        return "Main Controller - User ID: " + userId + ", Role: " + role;
 	}
 
 }
