@@ -21,6 +21,7 @@ public class MainController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
 		System.out.println("Test: " + authentication);
+		System.out.println(org.hibernate.Version.getVersionString());
 		
 		Collection<? extends GrantedAuthority> authorites = authentication.getAuthorities();
 		Iterator<? extends GrantedAuthority> iter = authorites.iterator();

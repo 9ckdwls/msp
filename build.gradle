@@ -37,6 +37,10 @@ dependencies {
     //JDBC와 jpa
     implementation 'com.mysql:mysql-connector-j'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    
+    //위치정보
+    implementation 'org.locationtech.jts:jts-core:1.18.2'
+    implementation 'org.hibernate.orm:hibernate-spatial:6.4.10.Final'
 }
 
 tasks.named('test') {
