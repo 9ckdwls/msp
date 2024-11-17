@@ -6,13 +6,13 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.mysite.entity.UserEntity;
+import com.mysite.entity.User;
 
 public class CustomUserDetails implements UserDetails {
 	
-	private final UserEntity userEntity;
+	private final User userEntity;
 	
-	public CustomUserDetails(UserEntity userEntity) {
+	public CustomUserDetails(User userEntity) {
 		this.userEntity = userEntity;
 	}
 

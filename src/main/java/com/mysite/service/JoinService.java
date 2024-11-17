@@ -4,7 +4,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mysite.dto.JoinDTO;
-import com.mysite.entity.UserEntity;
+import com.mysite.entity.User;
 import com.mysite.repository.UserRepository;
 
 @Service
@@ -36,7 +36,7 @@ public class JoinService {
 			return;
 		}
 		
-		UserEntity data = new UserEntity();
+		User data = new User();
 		data.setUserId(userId);
 		data.setUserPw(bCryptPasswordEncoder.encode(userPw));
 		//권한을 주려면 "ROLE_" 뒤에 써줘야 한다고 함

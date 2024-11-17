@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.mysite.dto.CustomUserDetails;
-import com.mysite.entity.UserEntity;
+import com.mysite.entity.User;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -50,7 +50,7 @@ public class JWTFilter extends OncePerRequestFilter{
 		String userId = jwtUtil.getUserId(token);
 		String role =jwtUtil.getRole(token);
 		
-		UserEntity userEntity = new UserEntity();
+		User userEntity = new User();
 		userEntity.setUserId(userId);
 		userEntity.setUserPw("pw");
 		userEntity.setUserRole(role);
