@@ -15,7 +15,6 @@ public class BoxService {
 
 	private final BoxRepository repository;
 	private final GeometryFactory geometryFactory;
-
 	public BoxService(BoxRepository repository) {
 		this.repository = repository;
 		this.geometryFactory = new GeometryFactory();

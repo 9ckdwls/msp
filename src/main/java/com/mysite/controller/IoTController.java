@@ -1,9 +1,7 @@
 package com.mysite.controller;
 
 import java.util.concurrent.CompletableFuture;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import java.util.concurrent.CompletionException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,34 +25,34 @@ public class IoTController {
 
 	// IoT 문열기
 	@GetMapping("/openBox/{id}")
-	public CompletableFuture<ResponseEntity<String>> openBox(@PathVariable(name = "id") int boxId) {
-		String role = userService.getCurrentUserRole(); // 사용자 권한(Role) 가져오기
+	public String openBox(@PathVariable(name = "id") int boxId) {
+	    String role = userService.getCurrentUserRole(); // 사용자 권한(Role) 가져오기
+	    CompletableFuture<String> ioTResponse;
 
-		CompletableFuture<String> ioTResponse;
+	    if (role.equals("ROLE_ADMIN")) {
+	        ioTResponse = ioTService.employeeOpenBox(boxId);
+	    } else if (role.equals("ROLE_USER")) {
+	        ioTResponse = ioTService.userOpenBox(boxId);
+	    } else {
+	        return null;
+	    }
 
-		if (role.equals("ROLE_ADMIN")) {
-			ioTResponse = ioTService.employeeOpenBox(boxId);
-		} else if (role.equals("ROLE_USER"))
-			ioTResponse = ioTService.userOpenBox(boxId);
-		else {
-			return CompletableFuture
-					.completedFuture(ResponseEntity.status(HttpStatus.FORBIDDEN).body("잘못된 요청입니다."));
-		}
-		
-		return ioTResponse.thenApply(response -> {
-		    return ResponseEntity.ok("문이 열렸습니다: " + response);
-		}).exceptionally(
-		    ex -> {
-		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("문 열기 실패: " + ex.getMessage());
-		    }
-		);
-
+	    try {
+	        // 비동기 작업이 끝날 때까지 기다리고 결과 반환
+	        String response = ioTResponse.join(); // join() 사용하여 비동기 결과를 기다림
+	        System.out.println("비동기 처리 끝?");
+	        System.out.println(response);
+	        return response;  // join()이 완료되면 그 값을 CompletableFuture로 반환
+	    } catch (CompletionException e) {
+	        // 예외 처리
+	    	System.out.println("예외 실행");
+	        return null;
+	    }
 	}
 
 	// IoT 문닫기
 	@GetMapping("/closeBox/{id}")
-	public CompletableFuture<ResponseEntity<IoTResponse>> closeBox(@PathVariable(name = "id") int boxId) {
-		String userId = userService.getCurrentUserId(); // 사용자 ID 가져오기
+	public IoTResponse closeBox(@PathVariable(name = "id") int boxId) {
 		String role = userService.getCurrentUserRole(); // 사용자 권한(Role) 가져오기
 		
 		CompletableFuture<IoTResponse> ioTResponse;
@@ -64,20 +62,19 @@ public class IoTController {
 		} else if (role.equals("ROLE_USER"))
 			ioTResponse = ioTService.userCloseBox(boxId);
 		else {
-			return CompletableFuture
-					.completedFuture(ResponseEntity.status(HttpStatus.FORBIDDEN).body(null));
+			return null;
 		}
 		
-		return ioTResponse.thenApply(response -> {
-			if (role.equals("ROLE_ADMIN")) {
-				ioTService.collectionComplete(userId, boxId, response.getWeight());
-	        } else if (role.equals("ROLE_USER")) {
-	        	ioTService.RecyclingComplete(userId, boxId, response.getWeight());
-	        }
-			ioTService.addBoxSensorLog(response);
-			return ResponseEntity.ok(response);
-		}).exceptionally(
-				ex -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null));
+		try {
+	        // 비동기 작업이 끝날 때까지 기다리고 결과 반환
+			IoTResponse response = ioTResponse.join(); // join() 사용하여 비동기 결과를 기다림
+	        System.out.println(response);
+	        return response;  // join()이 완료되면 그 값을 CompletableFuture로 반환
+	    } catch (CompletionException e) {
+	        // 예외 처리
+	    	System.out.println("예외 실행");
+	        return null;
+	    }
 	}
 
 	// 윤식이랑 IoT 통신 테스트를 위한 임시 URL

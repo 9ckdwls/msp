@@ -2,10 +2,8 @@ package com.mysite.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-
 import com.mysite.dto.IoTResponse;
 import com.mysite.entity.Box;
-
 import reactor.core.publisher.Mono;
 import java.util.concurrent.CompletableFuture;
 import java.time.Duration;
@@ -48,24 +46,28 @@ public class IoTService {
 	}
 
 	// 공통된 IoT 요청을 처리하는 메서드
+	// 공통된 IoT 요청을 처리하는 메서드
 	private CompletableFuture<String> sendIoTRequest(String address, String uri) {
-		WebClient webClient = webClientBuilder.baseUrl("http://" + address).build();
+	    WebClient webClient = webClientBuilder.baseUrl("http://" + address).build();
 
-		Mono<String> responseMono = webClient.get().uri(uri)
-				.retrieve().bodyToMono(String.class).timeout(Duration.ofSeconds(60)) // 시간 초과 처리
-				.onErrorResume(e -> {
-					if (e instanceof java.net.SocketTimeoutException) {
-						return Mono.just("시간 초과로 인해 요청을 처리할 수 없습니다.");
-					} else if (e instanceof ConnectException) {
-						// 네트워크 연결 문제 처리
-						return Mono.just("네트워크 연결 실패: IoT 장비에 연결할 수 없습니다.");
-					} else {
-						return Mono.just("네트워크 오류로 요청을 처리할 수 없습니다.");
-					}
-				});
+	    Mono<String> responseMono = webClient.get().uri(uri)
+	            .retrieve().bodyToMono(String.class).timeout(Duration.ofSeconds(6000000)) // 시간 초과 처리
+	            .onErrorResume(e -> {
+	                System.out.println("오류 발생!");
+	                if (e instanceof java.net.SocketTimeoutException) {
+	                    return Mono.just("시간 초과로 인해 요청을 처리할 수 없습니다.");
+	                } else if (e instanceof ConnectException) {
+	                    // 네트워크 연결 문제 처리
+	                    return Mono.just("네트워크 연결 실패: IoT 장비에 연결할 수 없습니다.");
+	                } else {
+	                    return Mono.just("네트워크 오류로 요청을 처리할 수 없습니다.");
+	                }
+	            });
 
-		return responseMono.toFuture();
+	    System.out.println("서비스 단에서 리턴");
+	    return responseMono.toFuture();
 	}
+
 
 	// 직원용 문닫기
     public CompletableFuture<IoTResponse> employeeCloseBox(int boxId) {

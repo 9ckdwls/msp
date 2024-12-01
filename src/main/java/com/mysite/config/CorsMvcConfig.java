@@ -11,7 +11,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
 	public void addCorsMappings(CorsRegistry corsRegistry) {
 
 		corsRegistry.addMapping("/**")
-		.allowedOrigins("http://localhost:8081","http://192.168.0.7:8081")  // 모든 출처 허용
+		.allowedOrigins("http://localhost:8081","http://192.168.0.20:8081")  // 모든 출처 허용
 		.allowedHeaders("*");
 	}
 }

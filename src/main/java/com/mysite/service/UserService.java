@@ -45,6 +45,7 @@ public class UserService {
     }
     
     public User findUserByUserId(String id) {
+
     	Optional<User> userOptional = userRepositroy.findById(id);
 		return userOptional.get(); // 존재하지 않을 경우 null 반환
     }

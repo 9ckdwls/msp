@@ -1,7 +1,5 @@
 package com.mysite.entity;
 
-import java.util.Date;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EmbeddedId;
 import lombok.Getter;

@@ -8,8 +8,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-import org.locationtech.jts.geom.Point;
-
 @Embeddable
 @Getter
 @Setter
