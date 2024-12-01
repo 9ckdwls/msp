@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BoxRepository extends JpaRepository<Box, Integer> {
@@ -22,4 +23,6 @@ public interface BoxRepository extends JpaRepository<Box, Integer> {
     // 주어진 무게보다 작은 박스 구하기
     @Query("SELECT b FROM Box b WHERE b.used < ?1")
     List<Box> findBoxesWithWeightLessThan(int used);
+
+	Optional<Box> findByName(String name);
 }

@@ -49,4 +49,9 @@ public class BoxService {
 			List<Box> boxes = repository.findBoxesWithWeightLessThan(50);
 		}
 	}
+
+	public Box findBoxByName(String name) {
+		Optional<Box> boxOptional = repository.findByName(name);
+		return boxOptional.get();
+	}
 }

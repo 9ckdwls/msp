@@ -34,6 +34,9 @@ public class OrderService {
 		
 		OrderDetails newOrder = new OrderDetails();
 		OrderId newOrderId = new OrderId();
+		
+		if(orderDTO.getCount()==0)
+			return;
 
 		if (!orders.isEmpty()) {
 			for (OrderDetails order : orders) {

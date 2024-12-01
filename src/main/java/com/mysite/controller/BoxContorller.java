@@ -30,8 +30,13 @@ public class BoxContorller {
 	//수거함 상세보기
 	@GetMapping("/searchBox/{id}")
 	public Box searchBox(@PathVariable(value = "id") int id) {
-		Box box = service.findBoxById(id);
-		return box;
+		return service.findBoxById(id);
+	}
+	
+	//수거함 이름으로 검색하기
+	@GetMapping("/searchByBoxName/{name}")
+	public Box searchBox(@PathVariable(value = "name") String name) {
+		return service.findBoxByName(name);
 	}
 	
 }
