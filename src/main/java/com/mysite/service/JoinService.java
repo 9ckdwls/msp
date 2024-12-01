@@ -28,8 +28,6 @@ public class JoinService {
 		String userDate = joinDTO.getUserDate();
 		String userEmail = joinDTO.getUserEmail();
 		
-		String userRole = joinDTO.getUserRole();
-		
 		Boolean isExist = userRepository.existsByUserId(userId);
 		
 		if(isExist) {

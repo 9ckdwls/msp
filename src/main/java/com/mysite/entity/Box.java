@@ -2,6 +2,7 @@ package com.mysite.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 import org.locationtech.jts.geom.Point;

@@ -7,6 +7,7 @@ import com.mysite.entity.RecyclingId;
 import com.mysite.repository.RecyclingRepository;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class RecyclingService {
@@ -17,6 +18,7 @@ public class RecyclingService {
         this.recyclingRepository = recyclingRepository;
     }
 
+    //일반사용자 분리수거 로그 추가하기
     public void addLog(String userId, int boxId, int weight) {
     	RecyclingId recyclingId = new RecyclingId(userId, new Date(), boxId);
         
@@ -24,7 +26,13 @@ public class RecyclingService {
         
     	recycling.setRecyclingId(recyclingId);
     	recycling.setWeight(weight);
+    	recycling.setUserP(weight); //weight를 point로 변환
         
         recyclingRepository.save(recycling);
+    }
+    
+    //내 재활용 로그 가져오기
+    public List<Recycling> findCollectionByRecyclingId_UserId(String userId) {
+    	return recyclingRepository.findCollectionByRecyclingId_UserId(userId);
     }
 }

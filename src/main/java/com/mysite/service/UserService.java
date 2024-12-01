@@ -48,4 +48,12 @@ public class UserService {
     	Optional<User> userOptional = userRepositroy.findById(id);
 		return userOptional.get(); // 존재하지 않을 경우 null 반환
     }
+    
+    // 분리수거 완료 후 포인트 적립
+    public void addPoint(String id, int point) {
+    	User user = findUserByUserId(id);
+    	int totalPoing = user.getUserP();
+    	user.setUserP(totalPoing);
+    	userRepositroy.save(user);
+    }
 }

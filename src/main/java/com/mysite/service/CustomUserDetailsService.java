@@ -22,6 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 		
 		User userData = userRepository.findByUserId(userId);
+		System.out.println("IoT가 입력한 userId: " + userId);
 		
 		if(userData != null) {
 			return new CustomUserDetails(userData);

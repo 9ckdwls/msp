@@ -1,5 +1,6 @@
 package com.mysite.config;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
@@ -56,7 +57,8 @@ public class SecurityConfig {
 						public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 							CorsConfiguration configuration = new CorsConfiguration();
 							
-							configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+							configuration.setAllowedOrigins(Arrays.asList("http://localhost:8081", "http://192.168.0.20:8081"));
+
 							configuration.setAllowedMethods(Collections.singletonList("*"));
 							configuration.setAllowCredentials(true);
 							configuration.setAllowedHeaders(Collections.singletonList("*"));

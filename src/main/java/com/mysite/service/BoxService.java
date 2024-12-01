@@ -21,6 +21,7 @@ public class BoxService {
 		this.geometryFactory = new GeometryFactory();
 	}
 
+	//근처 박스 찾기
 	public List<Box> findNearbyBoxes(double latitude, double longitude, double radius) {
 		// 주어진 좌표에서 Point 객체 생성
 		Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
@@ -33,5 +34,20 @@ public class BoxService {
 	public Box findBoxById(int id) {
 		Optional<Box> boxOptional = repository.findById(id);
 		return boxOptional.get(); // 존재하지 않을 경우 null 반환
+	}
+	
+	//수거함 무게에 따라 사용여부 변경
+	public void boxUpdate(int id, int used) {
+		Box box = findBoxById(id);
+		box.setUsed(used); //얼마나 차 있는지
+		repository.save(box);
+		
+		if(box.getUsed()>50) {
+			//리액트로 api 요청 보내기
+			List<Box> boxes = repository.findBoxesWithWeightGreaterThanOrEqual(70);
+		} else if(box.getUsed()<50) {
+			//리액트로 api 요청 보내기
+			List<Box> boxes = repository.findBoxesWithWeightLessThan(50);
+		}
 	}
 }

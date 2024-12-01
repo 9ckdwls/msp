@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.mysite.dto.IoTResponse;
+import com.mysite.entity.Box;
+
 import reactor.core.publisher.Mono;
 import java.util.concurrent.CompletableFuture;
 import java.time.Duration;
@@ -13,26 +15,43 @@ import java.net.ConnectException;
 public class IoTService {
 
 	private final WebClient.Builder webClientBuilder;
+	private final BoxService boxService;
+	private final CollectionService collectionService;
+	private final RecyclingService recyclingService;
+	private final UserService userService;
+	private final BoxSensorLogService boxSensorLogService;
 
-	public IoTService(WebClient.Builder webClientBuilder) {
+	public IoTService(WebClient.Builder webClientBuilder, BoxService boxService, CollectionService collectionService,
+			RecyclingService recyclingService, UserService userService, BoxSensorLogService boxSensorLogService) {
 		this.webClientBuilder = webClientBuilder;
+		this.boxService = boxService;
+		this.collectionService = collectionService;
+		this.recyclingService = recyclingService;
+		this.userService = userService;
+		this.boxSensorLogService = boxSensorLogService;
+	}
+	
+	//수거함 id로 수거함 찾기
+	private Box findBoxById(int id) {
+		return boxService.findBoxById(id);
 	}
 
 	// 직원용 문열기
-	public CompletableFuture<String> employeeOpenBox(String address) {
-		return sendIoTRequest(address, "/outopen");
+	public CompletableFuture<String> employeeOpenBox(int boxId) {
+		return sendIoTRequest(findBoxById(boxId).getAddress(), "/outopen");
 	}
 
 	// 사용자용 문열기
-	public CompletableFuture<String> userOpenBox(String address) {
-		return sendIoTRequest(address, "/inopen");
+	public CompletableFuture<String> userOpenBox(int boxId) {
+		
+		return sendIoTRequest(findBoxById(boxId).getAddress(), "/inopen");
 	}
 
 	// 공통된 IoT 요청을 처리하는 메서드
 	private CompletableFuture<String> sendIoTRequest(String address, String uri) {
 		WebClient webClient = webClientBuilder.baseUrl("http://" + address).build();
 
-		Mono<String> responseMono = webClient.get().uri(uri) // 동적으로 URI 설정
+		Mono<String> responseMono = webClient.get().uri(uri)
 				.retrieve().bodyToMono(String.class).timeout(Duration.ofSeconds(60)) // 시간 초과 처리
 				.onErrorResume(e -> {
 					if (e instanceof java.net.SocketTimeoutException) {
@@ -49,20 +68,20 @@ public class IoTService {
 	}
 
 	// 직원용 문닫기
-    public CompletableFuture<IoTResponse> employeeCloseBox(String address) {
-        return sendIoTResponseRequest(address, "/outclose");
+    public CompletableFuture<IoTResponse> employeeCloseBox(int boxId) {
+        return sendIoTResponseRequest(findBoxById(boxId).getAddress(), "/outclose");
     }
 
     // 사용자용 문닫기
-    public CompletableFuture<IoTResponse> userCloseBox(String address) {
-        return sendIoTResponseRequest(address, "/intclose");
+    public CompletableFuture<IoTResponse> userCloseBox(int boxId) {
+        return sendIoTResponseRequest(findBoxById(boxId).getAddress(), "/intclose");
     }
 
 	// 공통된 IoT 요청 (응답 타입이 IoTResponse인 경우)
 	private CompletableFuture<IoTResponse> sendIoTResponseRequest(String address, String uri) {
 		WebClient webClient = webClientBuilder.baseUrl("http://" + address).build();
 		
-		Mono<IoTResponse> responseMono = webClient.get().uri(uri) // 동적으로 URI 설정
+		Mono<IoTResponse> responseMono = webClient.get().uri(uri)
 				.retrieve().bodyToMono(IoTResponse.class).timeout(Duration.ofSeconds(60)) // 시간 초과 처리
 				.onErrorResume(e -> {
 					if (e instanceof java.net.SocketTimeoutException) {
@@ -76,5 +95,26 @@ public class IoTService {
 				});
 
 		return responseMono.toFuture();
+	}
+	
+	//수거함 센서로그 추가
+	public void addBoxSensorLog(IoTResponse iotResponse) {
+		boxSensorLogService.addBoxSensorLog(iotResponse);
+		//수거함 센서로그 값이 바뀌면 수거함 상태도 바꿔야 함
+		boxService.boxUpdate(iotResponse.getId(), iotResponse.getWeightNow());
+	}
+	
+	//수거자 수거 완료
+	public void collectionComplete(String userId, int BoxId, int weight) {
+		//수거 로그 추가
+		collectionService.addLog(userId, BoxId, weight);
+	}
+	
+	//일반사용자 분리 완료
+	public void RecyclingComplete(String userId, int BoxId, int weight) {
+		//분리 로그 추가
+		recyclingService.addLog(userId, BoxId, weight);
+		//사용자 포인트 증가
+		userService.addPoint(userId, weight);
 	}
 }

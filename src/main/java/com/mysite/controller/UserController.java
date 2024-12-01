@@ -10,19 +10,18 @@ import com.mysite.service.UserService;
 @RestController
 @RequestMapping("/msp")
 public class UserController {
-	
+
 	private final UserService userService;
-	
+
 	public UserController(UserService userService) {
 		this.userService = userService;
 	}
-	
-	//분리 및 수거하기
-		@GetMapping("/myInfo")
-		public User myInfo() {
-			String userId = userService.getCurrentUserId(); // 사용자 ID 가져오기
-	        
-	        User user = userService.findUserByUserId(userId);
-			return user;
-		}
+
+	@GetMapping("/myInfo")
+	public User myInfo() {
+		String userId = userService.getCurrentUserId(); // 사용자 ID 가져오기
+
+		User user = userService.findUserByUserId(userId);
+		return user;
+	}
 }

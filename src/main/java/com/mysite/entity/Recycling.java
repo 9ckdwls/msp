@@ -17,6 +17,8 @@ public class Recycling {
     private RecyclingId recyclingId;  // 복합 기본키 클래스 사용
 
     private int weight;
+    
+    private int userP;
 
     // 기본 생성자, getter, setter 등 생략
 }

@@ -14,9 +14,7 @@ import jakarta.persistence.EmbeddedId;
 public class Collection {
 
     @EmbeddedId
-    private CollectionId collectionId;  // 복합 기본키 클래스 사용
+    private CollectionId collectionId;
 
     private int weight;
-
-    // 기본 생성자, getter, setter 등 생략
 }

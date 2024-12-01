@@ -1,10 +1,7 @@
 package com.mysite.service;
 
 import java.util.Date;
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
-
 import com.mysite.dto.IoTResponse;
 import com.mysite.entity.BoxSensorLog;
 import com.mysite.entity.BoxSensorLogId;
@@ -14,11 +11,9 @@ import com.mysite.repository.BoxSensorLogRepository;
 public class BoxSensorLogService {
 
 	private final BoxSensorLogRepository boxSensorLogRepository;
-	private final BoxService boxService;
 
-	public BoxSensorLogService(BoxSensorLogRepository boxSensorLogRepository, BoxService boxService) {
+	public BoxSensorLogService(BoxSensorLogRepository boxSensorLogRepository) {
 		this.boxSensorLogRepository = boxSensorLogRepository;
-		this.boxService = boxService;
 	}
 
 	// 분리 및 수거 후 수거함 센서 데이터 업데이트
