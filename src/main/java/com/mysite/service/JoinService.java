@@ -37,8 +37,15 @@ public class JoinService {
 		User data = new User();
 		data.setUserId(userId);
 		data.setUserPw(bCryptPasswordEncoder.encode(userPw));
-		//권한을 주려면 "ROLE_" 뒤에 써줘야 한다고 함
-		data.setUserRole("ROLE_ADMIN");
+
+		if(joinDTO.getUserRole().equals("admin9")) {
+			//권한을 주려면 "ROLE_" 뒤에 써줘야 한다고 함
+			data.setUserRole("ROLE_ADMIN");
+		} else if(joinDTO.getUserRole().equals("")) {
+			data.setUserRole("ROLE_USER");
+		} else {
+			return;
+		}
 		
 		data.setUserName(userName);
 		data.setUserAdd(userAdd);
