@@ -16,13 +16,8 @@ public interface BoxRepository extends JpaRepository<Box, Integer> {
     @Query("SELECT b FROM Box b WHERE ST_Distance_Sphere(b.location, ?1) <= ?2")
     List<Box> findByLocationWithinRadius(Point point, double radius);
     
-    // 주어진 무게보다 큰 박스 구하기
-    @Query("SELECT b FROM Box b WHERE b.used >= ?1")
-    List<Box> findBoxesWithWeightGreaterThanOrEqual(int used);
-    
-    // 주어진 무게보다 작은 박스 구하기
-    @Query("SELECT b FROM Box b WHERE b.used < ?1")
-    List<Box> findBoxesWithWeightLessThan(int used);
+    //주어진 무게보다 그거 fire가 1인 수거함 찾기
+    List<Box> findByUsedGreaterThanEqualOrFire(int used, int fire);
 
 	Optional<Box> findByName(String name);
 }

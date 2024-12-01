@@ -1,5 +1,7 @@
 package com.mysite.entity;
 
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Getter;
@@ -16,7 +18,7 @@ public class User {
 	private String userName;
 	private String userAdd;
 	private int userP;
-	private String userDate;
+	private Date userDate;
 	private String userEmail;
 	
 	private String userRole;

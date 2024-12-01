@@ -44,6 +44,7 @@ public class UserService {
         return null; // 권한이 없거나 인증되지 않은 경우 null 반환
     }
     
+    // 회원 id로 사용자 찾기
     public User findUserByUserId(String id) {
 
     	Optional<User> userOptional = userRepositroy.findById(id);
@@ -54,7 +55,18 @@ public class UserService {
     public void addPoint(String id, int point) {
     	User user = findUserByUserId(id);
     	int totalPoing = user.getUserP();
-    	user.setUserP(totalPoing);
+    	user.setUserP(totalPoing + point);
     	userRepositroy.save(user);
     }
+
+	public String userOrder(User user, int totalPrice) {
+		if(user.getUserP() < totalPrice) {
+			return null;
+		} else {
+			user.setUserP(user.getUserP() - totalPrice);
+			userRepositroy.save(user);
+			return "ok";
+		}
+		
+	}
 }

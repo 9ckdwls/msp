@@ -12,7 +12,6 @@ public class JoinDTO {
 	private String userName;
 	private String userAdd;
 	private int userP;
-	private String userDate;
 	private String userEmail;
 	
 	private String userRole;

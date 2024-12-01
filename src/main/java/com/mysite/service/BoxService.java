@@ -1,5 +1,6 @@
 package com.mysite.service;
 
+import com.mysite.dto.IoTResponse;
 import com.mysite.entity.Box;
 import com.mysite.repository.BoxRepository;
 import org.locationtech.jts.geom.Coordinate;
@@ -36,22 +37,19 @@ public class BoxService {
 	}
 	
 	//수거함 무게에 따라 사용여부 변경
-	public void boxUpdate(int id, int used) {
-		Box box = findBoxById(id);
-		box.setUsed(used); //얼마나 차 있는지
+	public void boxUpdate(IoTResponse iotResponse) {
+		Box box = findBoxById(iotResponse.getId());
+		box.setUsed(iotResponse.getWeightNow()); //얼마나 차 있는지
+		box.setFire(iotResponse.getFire());
 		repository.save(box);
-		
-		if(box.getUsed()>50) {
-			//리액트로 api 요청 보내기
-			List<Box> boxes = repository.findBoxesWithWeightGreaterThanOrEqual(70);
-		} else if(box.getUsed()<50) {
-			//리액트로 api 요청 보내기
-			List<Box> boxes = repository.findBoxesWithWeightLessThan(50);
-		}
 	}
 
 	public Box findBoxByName(String name) {
 		Optional<Box> boxOptional = repository.findByName(name);
 		return boxOptional.get();
+	}
+
+	public List<Box> alarm() {
+		return repository.findByUsedGreaterThanEqualOrFire(50, 1);
 	}
 }

@@ -19,11 +19,11 @@ public class Box {
 	
 	private String address;
 	
-	private String QRKey;
-	
 	private Point location;
 	
 	private int used;
+	
+	private int fire;
 	
 	//반환되는 JSON 값을 문자열로 바꾸기
 	@JsonProperty("location")

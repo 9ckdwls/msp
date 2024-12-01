@@ -1,4 +1,4 @@
-package com.mysite.controller;
+package com.mysite.service;
 
 import java.util.Date;
 import java.util.List;
@@ -10,9 +10,8 @@ import com.mysite.dto.OrderDTO;
 import com.mysite.entity.Item;
 import com.mysite.entity.OrderDetails;
 import com.mysite.entity.OrderId;
+import com.mysite.entity.User;
 import com.mysite.repository.OrderRepository;
-import com.mysite.service.ItemService;
-import com.mysite.service.UserService;
 
 @Service
 public class OrderService {
@@ -85,12 +84,23 @@ public class OrderService {
 
 	// 장바구니에서 상품 주문
 	public String order() {
-		List<OrderDetails> orders = orderRepository.findByOrderIdUserIdAndState(userService.getCurrentUserId(), 0);
+		User user = userService.findUserByUserId(userService.getCurrentUserId());
+		List<OrderDetails> orders = orderRepository.findByOrderIdUserIdAndState(user.getUserId(), 0);
+		int totalPrice = 0;
 		
 		if(orders.isEmpty()) {
 			return "fail";
 		}
-		else {
+		
+		for(OrderDetails order : orders) {
+			totalPrice += order.getPrice();
+		}
+		
+		 System.out.println("총 가격" + totalPrice);
+		
+		if(userService.userOrder(user, totalPrice) == null) {
+			return "fail";
+		} else {
 			for(OrderDetails order : orders) {
 				order.setState(1);
 				order.setDate(new Date());

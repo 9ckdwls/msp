@@ -51,7 +51,7 @@ public class IoTService {
 	    WebClient webClient = webClientBuilder.baseUrl("http://" + address).build();
 
 	    Mono<String> responseMono = webClient.get().uri(uri)
-	            .retrieve().bodyToMono(String.class).timeout(Duration.ofSeconds(6000000)) // 시간 초과 처리
+	            .retrieve().bodyToMono(String.class).timeout(Duration.ofSeconds(60)) // 시간 초과 처리
 	            .onErrorResume(e -> {
 	                System.out.println("오류 발생!");
 	                if (e instanceof java.net.SocketTimeoutException) {
@@ -76,7 +76,7 @@ public class IoTService {
 
     // 사용자용 문닫기
     public CompletableFuture<IoTResponse> userCloseBox(int boxId) {
-        return sendIoTResponseRequest(findBoxById(boxId).getAddress(), "/intclose");
+        return sendIoTResponseRequest(findBoxById(boxId).getAddress(), "/inclose");
     }
 
 	// 공통된 IoT 요청 (응답 타입이 IoTResponse인 경우)
@@ -103,20 +103,20 @@ public class IoTService {
 	public void addBoxSensorLog(IoTResponse iotResponse) {
 		boxSensorLogService.addBoxSensorLog(iotResponse);
 		//수거함 센서로그 값이 바뀌면 수거함 상태도 바꿔야 함
-		boxService.boxUpdate(iotResponse.getId(), iotResponse.getWeightNow());
+		boxService.boxUpdate(iotResponse);
 	}
 	
 	//수거자 수거 완료
-	public void collectionComplete(String userId, int BoxId, int weight) {
+	public void collectionComplete(int BoxId, int weight) {
 		//수거 로그 추가
-		collectionService.addLog(userId, BoxId, weight);
+		collectionService.addLog(userService.getCurrentUserId(), BoxId, weight);
 	}
 	
 	//일반사용자 분리 완료
-	public void RecyclingComplete(String userId, int BoxId, int weight) {
+	public void RecyclingComplete(int BoxId, int weight) {
 		//분리 로그 추가
-		recyclingService.addLog(userId, BoxId, weight);
+		recyclingService.addLog(userService.getCurrentUserId(), BoxId, weight);
 		//사용자 포인트 증가
-		userService.addPoint(userId, weight);
+		userService.addPoint(userService.getCurrentUserId(), weight);
 	}
 }

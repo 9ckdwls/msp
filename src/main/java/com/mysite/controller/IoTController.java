@@ -69,7 +69,16 @@ public class IoTController {
 	        // 비동기 작업이 끝날 때까지 기다리고 결과 반환
 			IoTResponse response = ioTResponse.join(); // join() 사용하여 비동기 결과를 기다림
 	        System.out.println(response);
-	        return response;  // join()이 완료되면 그 값을 CompletableFuture로 반환
+	        ioTService.addBoxSensorLog(response);
+	        
+	        if (role.equals("ROLE_ADMIN")) {
+	        	ioTService.collectionComplete(response.getId(), response.getWeight());
+			} else if (role.equals("ROLE_USER"))
+				ioTService.RecyclingComplete(response.getId(), response.getWeight());
+			else
+				return null;
+	        return response;
+	        
 	    } catch (CompletionException e) {
 	        // 예외 처리
 	    	System.out.println("예외 실행");

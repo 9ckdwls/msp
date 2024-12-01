@@ -1,6 +1,7 @@
 package com.mysite.jwt;
 
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -60,9 +61,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 	}
 	
 	@Override
-	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
 		
-		response.setStatus(401);
+		response.getWriter().write("fail");
 		
 		System.out.println("실패");
 	}

@@ -39,4 +39,11 @@ public class BoxContorller {
 		return service.findBoxByName(name);
 	}
 	
+	//알림이 필요한 수거함
+	@GetMapping("alarm")
+	public List<Box> alarm() {
+		return service.alarm();
+	}
+	
+	
 }

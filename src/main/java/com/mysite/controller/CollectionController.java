@@ -26,7 +26,6 @@ public class CollectionController {
 	@GetMapping("/myCollection")
 	public List<Collection> getMyCollection() {
 		String userId = userService.getCurrentUserId(); // 사용자 ID 가져오기
-		System.out.println("sdfkjdslkfjkl");
 		return collercionService.findCollectionByCollectionId_UserId(userId);
 	}
 }
